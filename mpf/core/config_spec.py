@@ -342,6 +342,10 @@ diverters:
     ball_search_order: single|int|100
     ball_search_hold_time: single|ms|1s
     playfield: single|machine(playfields)|playfield
+diypinball:
+    __valid_in__: machine
+    debug: single|bool|False
+    can_device: single|str|
 drop_targets:
     __valid_in__: machine
     switch: single|machine(switches)|
