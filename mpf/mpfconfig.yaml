@@ -83,6 +83,7 @@ mpf:
         mpf.plugins.switch_player.SwitchPlayer
 
     platforms:
+        diypinball: mpf.platforms.diypinball.HardwarePlatform
         fadecandy: mpf.platforms.fadecandy.FadecandyHardwarePlatform
         fast: mpf.platforms.fast.fast.FastHardwarePlatform
         i2c_servo_controller: mpf.platforms.i2c_servo_controller.I2CServoControllerHardwarePlatform
