@@ -20,6 +20,9 @@ class Driver(DriverPlatformInterface):
         self.platform.send(DriverStateCommand(self.board, self.driver, True))
         self.platform.log.debug('enable called')
 
+    def get_board_name(self):
+        return str(self.board)
+
     def pulse(self, coil, milliseconds=None):
         if milliseconds is None:
             milliseconds = self.config.get('pulse_ms', 20)
