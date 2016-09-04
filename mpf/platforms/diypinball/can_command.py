@@ -58,6 +58,13 @@ class MatrixLightCommand(CANCommand):
         self.data = struct.pack('B', brightness)
 
 
+class RGBLEDCommand(CANCommand):
+    def __init__(self, board, led, color):
+        super(RGBLEDCommand, self).__init__(board, led)
+        self.feature_type = Feature.rgb_led
+        self.data = struct.pack('BBB', *color)
+
+
 class ScoreSetCommand(CANCommand):
     def __init__(self, board, score):
         super(ScoreSetCommand, self).__init__(board, 0)
