@@ -7,3 +7,4 @@ class Feature(Enum):
     lamp = 2
     driver = 3
     score_display = 4
+    rgb_led = 5
