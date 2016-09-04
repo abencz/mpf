@@ -3,7 +3,7 @@ import threading
 import queue
 import time
 
-from mpf.core.platform import SwitchPlatform, DriverPlatform, MatrixLightsPlatform
+from mpf.core.platform import SwitchPlatform, DriverPlatform, MatrixLightsPlatform, LedPlatform
 
 from .feature import Feature
 from .can_device import CANDevice
@@ -15,9 +15,10 @@ from .rules import PulseOnHitRule, PulseOnHitAndReleaseRule, PulseOnHitAndEnable
 from .driver import Driver
 from .switch import Switch
 from .matrix_light import MatrixLight
+from .rgb_led import RGBLED
 
 
-class HardwarePlatform(SwitchPlatform, DriverPlatform, MatrixLightsPlatform):
+class HardwarePlatform(SwitchPlatform, DriverPlatform, MatrixLightsPlatform, LedPlatform):
     def __init__(self, machine):
         super(HardwarePlatform, self).__init__(machine)
 
@@ -121,5 +122,9 @@ class HardwarePlatform(SwitchPlatform, DriverPlatform, MatrixLightsPlatform):
         light = MatrixLight(self, config)
         return light
 
+    """ RBG LED Interface """
+    def configure_led(self, config, channels):
+        if channels > 3:
+            raise AssertionError('DIYPinball only supports RGB LEDs')
 
-
+        return RGBLED(self, config)
