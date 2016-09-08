@@ -27,6 +27,7 @@ class HardwarePlatform(SwitchPlatform, DriverPlatform, MatrixLightsPlatform, Led
 
         self.can = None
         self.switches = {}
+        self.checking_switch_state = False
 
     def initialize(self):
         self.config = self.machine.config['diypinball']
@@ -60,9 +61,10 @@ class HardwarePlatform(SwitchPlatform, DriverPlatform, MatrixLightsPlatform, Led
             if event.hw_id in self.switches:
                 self.switches[event.hw_id].process_event(event)
 
-            self.machine.switch_controller.process_switch_by_num(state=event.data[0],
-                                                                 num=event.hw_id,
-                                                                 platform=self)
+            if not self.checking_switch_state:
+                self.machine.switch_controller.process_switch_by_num(state=event.data[0],
+                                                                     num=event.hw_id,
+                                                                     platform=self)
 
     def send(self, cmd):
         self.send_queue.put(cmd)
@@ -89,10 +91,13 @@ class HardwarePlatform(SwitchPlatform, DriverPlatform, MatrixLightsPlatform, Led
         return switch
 
     def get_hw_switch_states(self):
+        self.checking_switch_state = True
         for switch in self.switches.values():
             self.send(SwitchRequestStatusCommand(switch.board, switch.switch))
-        self.tick(0.1)
-        time.sleep(0.1)
+        update_time = 0.005 * len(self.switches)
+        time.sleep(update_time)
+        self.tick(update_time)
+        self.checking_switch_state = False
         return {switch.number: switch.state for switch in self.switches.values()}
 
     """ Driver Interface """
