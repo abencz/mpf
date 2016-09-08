@@ -11,6 +11,11 @@ class RGBLED(RGBLEDPlatformInterface):
         self.config = config
         self.number = config['number']
         self.board, self.led = [int(i) for i in self.number.split('-')]
+        self.last_color = None
+        self.log.debug('Configured led {}'.format(self.number))
 
     def color(self, color):
-        self.platform.send(MatrixLightCommand(self.board, self.led, color))
+        if color != self.last_color:
+            self.log.debug('Sending color {} to led {} on board {}'.format(color, self.led, self.board))
+            self.platform.send(RGBLEDCommand(self.board, self.led, color))
+            self.last_color = color
