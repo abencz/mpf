@@ -20,5 +20,6 @@ class Switch(SwitchPlatformInterface):
             self.rules.pop(coil.number)
 
     def process_event(self, event):
+        self.state = event.data[0]
         for rule in self.rules.values():
             rule.process_event(event)
