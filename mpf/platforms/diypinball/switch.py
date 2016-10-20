@@ -18,6 +18,7 @@ class Switch(SwitchPlatformInterface):
     def remove_rule(self, coil):
         if coil.number in self.rules:
             self.rules.pop(coil.number)
+            coil.disable(None)
 
     def process_event(self, event):
         self.state = event.data[0]
