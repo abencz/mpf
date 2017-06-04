@@ -1,9 +1,11 @@
+import asyncio
+
 import logging
 import threading
 import queue
 import time
 
-from mpf.core.platform import SwitchPlatform, DriverPlatform, MatrixLightsPlatform, LedPlatform
+from mpf.core.platform import SwitchPlatform, DriverPlatform, LightsPlatform
 
 from .feature import Feature
 from .can_device import CANDevice
@@ -18,7 +20,7 @@ from .matrix_light import MatrixLight
 from .rgb_led import RGBLED
 
 
-class HardwarePlatform(SwitchPlatform, DriverPlatform, MatrixLightsPlatform, LedPlatform):
+class HardwarePlatform(SwitchPlatform, DriverPlatform, LightsPlatform):
     def __init__(self, machine):
         super(HardwarePlatform, self).__init__(machine)
 
@@ -29,6 +31,7 @@ class HardwarePlatform(SwitchPlatform, DriverPlatform, MatrixLightsPlatform, Led
         self.switches = {}
         self.checking_switch_state = False
 
+    @asyncio.coroutine
     def initialize(self):
         self.config = self.machine.config['diypinball']
         self.machine.config_validator.validate_config('diypinball', self.config)
@@ -51,7 +54,7 @@ class HardwarePlatform(SwitchPlatform, DriverPlatform, MatrixLightsPlatform, Led
     def stop(self):
         self.can.close()
 
-    def tick(self, dt):
+    def tick(self):
         while not self.recv_queue.empty():
             self.process_can_event(self.recv_queue.get(False))
 
@@ -123,8 +126,11 @@ class HardwarePlatform(SwitchPlatform, DriverPlatform, MatrixLightsPlatform, Led
         self.log.info('set_pulse_on_hit_rule called')
 
     """ MatrixLights Interface """
-    def configure_matrixlight(self, config):
-        light = MatrixLight(self, config)
+    def parse_light_number_to_channels(self, number, subtype):
+        return [{ 'number': number }]
+
+    def configure_light(self, number, subtype, platform_settings):
+        light = MatrixLight(self, number, subtype, platform_settings)
         return light
 
     """ RBG LED Interface """
