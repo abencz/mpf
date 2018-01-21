@@ -1,21 +1,21 @@
 import logging
 
-from mpf.platforms.interfaces.matrix_light_platform_interface import MatrixLightPlatformInterface
+from mpf.platforms.interfaces.light_platform_interface import LightPlatformSoftwareFade
 from .can_command import MatrixLightCommand
 
 
-class MatrixLight(MatrixLightPlatformInterface):
-    def __init__(self, platform, config):
+class MatrixLight(LightPlatformSoftwareFade):
+    def __init__(self, platform, number):
         self.log = logging.getLogger('Platform.DIYPinball.MatrixLight')
         self.platform = platform
-        self.config = config
-        self.number = config['number']
+        self.number = number
         self.board, self.light = [int(i) for i in self.number.split('-')]
         self.last_brightness = None
 
-    def on(self, brightness=255):
+    def set_brightness(self, brightness: float):
         if self.last_brightness != brightness:
-            self.platform.send(MatrixLightCommand(self.board, self.light, brightness))
+            cmd_brightness = 255 * brightness
+            self.platform.send(MatrixLightCommand(self.board, self.light, cmd_brightness))
             self.last_brightness = brightness
 
     def off(self):

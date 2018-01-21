@@ -1,10 +1,10 @@
 import logging
 
-from mpf.platforms.interfaces.rgb_led_platform_interface import RGBLEDPlatformInterface
+from mpf.platforms.interfaces.light_platform_interface import LightPlatformInterface
 from .can_command import RGBLEDCommand
 
 
-class RGBLED(RGBLEDPlatformInterface):
+class RGBLED(LightPlatformInterface):
     def __init__(self, platform, config):
         self.log = logging.getLogger('Platform.DIYPinball.RGBLED')
         self.platform = platform

@@ -255,6 +255,10 @@ digital_outputs:
     platform: single|str|None
     type: single|enum(light,driver)|
     light_subtype: single|str|None
+diypinball:
+    __valid_in__: machine
+    debug: single|bool|False
+    can_device: single|str|
 dual_wound_coils:
     __valid_in__: machine
     main_coil: single|machine(coils)|
