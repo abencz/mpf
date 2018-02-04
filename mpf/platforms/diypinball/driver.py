@@ -5,11 +5,11 @@ from .can_command import DriverStateCommand, DriverPulseCommand
 
 
 class Driver(DriverPlatformInterface):
-    def __init__(self, platform, config):
+    def __init__(self, platform, config, number):
         self.log = logging.getLogger('Platform.DIYPinball.Driver')
         self.platform = platform
         self.config = config
-        self.number = config['number']
+        self.number = number
         self.board, self.driver = [int(i) for i in self.number.split('-')]
 
     def disable(self, coil):
@@ -23,9 +23,10 @@ class Driver(DriverPlatformInterface):
     def get_board_name(self):
         return str(self.board)
 
-    def pulse(self, coil, milliseconds=None):
-        if milliseconds is None:
-            milliseconds = self.config.get('pulse_ms', 20)
+    def pulse(self, pulse_settings):
+        milliseconds = pulse_settings.duration
+        if milliseconds > 20:
+            milliseconds = 20
         self.platform.send(DriverPulseCommand(self.board, self.driver, milliseconds))
         self.platform.log.debug('pulse called on {}'.format(self.number))
         return milliseconds

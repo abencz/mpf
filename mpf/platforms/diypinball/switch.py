@@ -4,9 +4,8 @@ from mpf.platforms.interfaces.switch_platform_interface import SwitchPlatformInt
 
 
 class Switch(SwitchPlatformInterface):
-    def __init__(self, platform, config):
+    def __init__(self, platform, config, number):
         self.log = logging.getLogger('Platform.DIYPinball.Switch')
-        number = config['number']
         self.state = 0
         self.board, self.switch = [int(i) for i in number.split('-')]
         self.rules = {}

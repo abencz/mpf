@@ -14,7 +14,7 @@ class MatrixLight(LightPlatformSoftwareFade):
 
     def set_brightness(self, brightness: float):
         if self.last_brightness != brightness:
-            cmd_brightness = 255 * brightness
+            cmd_brightness = int(255 * brightness)
             self.platform.send(MatrixLightCommand(self.board, self.light, cmd_brightness))
             self.last_brightness = brightness
 

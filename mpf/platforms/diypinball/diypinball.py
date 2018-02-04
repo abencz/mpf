@@ -87,25 +87,26 @@ class HardwarePlatform(SwitchPlatform, DriverPlatform, LightsPlatform):
 
 
     """ Switch Interface """
-    def configure_switch(self, config):
-        self.log.info('configuring switch {}'.format(config['number']))
-        switch = Switch(self, config)
+    def configure_switch(self, number, config, platform_settings):
+        self.log.info('configuring switch {}'.format(number))
+        switch = Switch(self, config, number)
         self.switches[switch.number] = switch
         return switch
 
+    @asyncio.coroutine
     def get_hw_switch_states(self):
         self.checking_switch_state = True
         for switch in self.switches.values():
             self.send(SwitchRequestStatusCommand(switch.board, switch.switch))
         update_time = 0.005 * len(self.switches)
         time.sleep(update_time)
-        self.tick(update_time)
+        self.tick()
         self.checking_switch_state = False
         return {switch.number: switch.state for switch in self.switches.values()}
 
     """ Driver Interface """
-    def configure_driver(self, config):
-        return Driver(self, config)
+    def configure_driver(self, config, number, platform_settings):
+        return Driver(self, config, number)
 
     def clear_hw_rule(self, switch, coil):
         switch.hw_switch.remove_rule(coil.hw_driver)
