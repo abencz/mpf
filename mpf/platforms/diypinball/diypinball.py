@@ -17,7 +17,7 @@ from .rules import PulseOnHitRule, PulseOnHitAndReleaseRule, PulseOnHitAndEnable
 from .driver import Driver
 from .switch import Switch
 from .matrix_light import MatrixLight
-from .rgb_led import RGBLED
+from .rgb_led import RGBLED, RGBLEDChannel
 
 
 class HardwarePlatform(SwitchPlatform, DriverPlatform, LightsPlatform):
@@ -29,6 +29,7 @@ class HardwarePlatform(SwitchPlatform, DriverPlatform, LightsPlatform):
 
         self.can = None
         self.switches = {}
+        self.leds = {}
         self.checking_switch_state = False
 
     @asyncio.coroutine
@@ -136,11 +137,17 @@ class HardwarePlatform(SwitchPlatform, DriverPlatform, LightsPlatform):
         ]
 
     def configure_light(self, number, subtype, platform_settings) -> LightPlatformInterface:
-        return MatrixLight(self, number)
+        self.log.info('configuring light {}, subtype {}'.format(number, subtype))
+        try:
+            number, channel = number.split("/")
+        except ValueError:
+            number = number
+            channel = None
 
-    """ RBG LED Interface """
-    def configure_led(self, config, channels):
-        if channels > 3:
-            raise AssertionError('DIYPinball only supports RGB LEDs')
+        if channel is None:
+            return MatrixLight(self, number)
+        else:
+            led = self.leds.get(number, RGBLED(self, number))
+            led_channel = RGBLEDChannel(led, channel)
 
-        return RGBLED(self, config)
+            return led_channel

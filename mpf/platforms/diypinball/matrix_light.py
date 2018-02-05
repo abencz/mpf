@@ -5,7 +5,7 @@ from .can_command import MatrixLightCommand
 
 
 class MatrixLight(LightPlatformSoftwareFade):
-    def __init__(self, platform, number):
+    def __init__(self, platform, number: str):
         self.log = logging.getLogger('Platform.DIYPinball.MatrixLight')
         self.platform = platform
         self.number = number
