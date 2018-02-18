@@ -1,10 +1,12 @@
+from mpf.platforms.interfaces.driver_platform_interface import PulseSettings
+
 class PulseOnHitRule(object):
     def __init__(self, coil):
         self.coil = coil
 
     def process_event(self, event):
         if event.data[0] == 1:
-            self.coil.pulse(None)
+            self.coil.pulse(PulseSettings(1.0, 10))
 
 
 class PulseOnHitAndReleaseRule(object):
@@ -13,7 +15,7 @@ class PulseOnHitAndReleaseRule(object):
 
     def process_event(self, event):
         if event.data[0] == 1:
-            self.coil.pulse(None)
+            self.coil.pulse(PulseSettings(1.0, 10))
 
 
 class PulseOnHitAndEnableAndReleaseRule(object):

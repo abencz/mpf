@@ -1,6 +1,6 @@
 import logging
 
-from mpf.platforms.interfaces.driver_platform_interface import DriverPlatformInterface
+from mpf.platforms.interfaces.driver_platform_interface import DriverPlatformInterface, PulseSettings
 from .can_command import DriverStateCommand, DriverPulseCommand
 
 
@@ -23,7 +23,7 @@ class Driver(DriverPlatformInterface):
     def get_board_name(self):
         return str(self.board)
 
-    def pulse(self, pulse_settings):
+    def pulse(self, pulse_settings: PulseSettings):
         milliseconds = pulse_settings.duration
         if milliseconds > 20:
             milliseconds = 20
