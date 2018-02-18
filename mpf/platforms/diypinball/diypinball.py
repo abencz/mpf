@@ -59,6 +59,9 @@ class HardwarePlatform(SwitchPlatform, DriverPlatform, LightsPlatform):
         while not self.recv_queue.empty():
             self.process_can_event(self.recv_queue.get(False))
 
+        for led in self.leds.values():
+            led.update_state()
+
     def process_can_event(self, event):
         if event.feature_type == Feature.switch:
             self.debug_log(str(event))
