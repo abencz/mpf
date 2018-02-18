@@ -147,7 +147,10 @@ class HardwarePlatform(SwitchPlatform, DriverPlatform, LightsPlatform):
         if channel is None:
             return MatrixLight(self, number)
         else:
-            led = self.leds.get(number, RGBLED(self, number))
+            if number not in self.leds:
+                self.leds[number] = RGBLED(self, number)
+
+            led = self.leds[number]
             led_channel = RGBLEDChannel(led, channel)
 
             return led_channel
