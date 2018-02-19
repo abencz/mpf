@@ -4,8 +4,9 @@ import threading
 import queue
 import time
 
-from mpf.core.platform import SwitchPlatform, DriverPlatform, LightsPlatform
+from mpf.core.platform import SwitchPlatform, DriverPlatform, LightsPlatform, SegmentDisplayPlatform
 from mpf.platforms.interfaces.light_platform_interface import LightPlatformInterface
+from mpf.platforms.interfaces.segment_display_platform_interface import SegmentDisplaySoftwareFlashPlatformInterface
 
 from .feature import Feature
 from .can_device import CANDevice
@@ -18,9 +19,10 @@ from .driver import Driver
 from .switch import Switch
 from .matrix_light import MatrixLight
 from .rgb_led import RGBLED, RGBLEDChannel
+from .segment_display import SegmentDisplay
 
 
-class HardwarePlatform(SwitchPlatform, DriverPlatform, LightsPlatform):
+class HardwarePlatform(SwitchPlatform, DriverPlatform, LightsPlatform, SegmentDisplayPlatform):
     def __init__(self, machine):
         super(HardwarePlatform, self).__init__(machine)
 
@@ -157,3 +159,8 @@ class HardwarePlatform(SwitchPlatform, DriverPlatform, LightsPlatform):
             led_channel = RGBLEDChannel(led, channel)
 
             return led_channel
+
+    """ Segment Display Interface """
+    def configure_segment_display(self, number: str) -> "SegmentDisplayPlatformInterface":
+        return SegmentDisplay(self, number)
+

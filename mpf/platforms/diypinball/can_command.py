@@ -82,8 +82,36 @@ class SwitchRequestStatusCommand(CANCommand):
 
 
 class TextSetCommand(CANCommand):
+    '''Class for sending text to the 7 segment displays
+
+    Each segment corresponds to a bit in a command byte, with up to 8 bytes per
+    message. The mapping of bits to segments is shown below. Bit 7 is the
+    period at the bottom right of a 7-segment element.
+
+          --6--
+         |     |
+         1     5
+         |     |
+          --0--
+         |     |
+         2     4
+         |     |
+          --3-- 7
+
+
+    '''
     character_lut = {
         ' ': 0x00,
+        '0': 0x7e,
+        '1': 0x30,
+        '2': 0x6d,
+        '3': 0x79,
+        '4': 0x33,
+        '5': 0x5b,
+        '6': 0x5f,
+        '7': 0x70,
+        '8': 0x7f,
+        '9': 0x7b,
         'a': 0x77,
         'b': 0x1F,
         'c': 0x4E,
@@ -112,7 +140,11 @@ class TextSetCommand(CANCommand):
         super(TextSetCommand, self).__init__(board, 0)
         self.feature_type = Feature.score_display
         self.msg_type = 2
-        self.data = self.convert_text(text)
+        self.data = self.convert_text(self.pad_text(text))
+
+    def pad_text(self, text):
+        text_len = len(text[:8])
+        return (' ' * (8 - text_len)) + text[:8]
 
     def convert_text(self, text):
         return bytes(self.character_lut[char] for char in text)
