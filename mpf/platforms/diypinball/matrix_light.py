@@ -22,3 +22,6 @@ class MatrixLight(LightPlatformSoftwareFade):
         if self.last_brightness != 0:
             self.platform.send(MatrixLightCommand(self.board, self.light, 0))
             self.last_brightness = 0
+
+    def get_board_name(self):
+        return 'diypinball'

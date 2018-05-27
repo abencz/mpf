@@ -44,3 +44,6 @@ class RGBLEDChannel(LightPlatformSoftwareFade):
     @property
     def number(self):
         return '/'.join((self.led.number, self.channel_char))
+
+    def get_board_name(self):
+        return 'diypinball'

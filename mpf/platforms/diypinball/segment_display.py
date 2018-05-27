@@ -15,3 +15,6 @@ class SegmentDisplay(SegmentDisplaySoftwareFlashPlatformInterface):
     def _set_text(self, text: str) -> None:
         self.log.warn('Setting display {} to "{}"'.format(self.board, text))
         self.platform.send(TextSetCommand(self.board, text))
+
+    def get_board_name(self):
+        return 'diypinball'

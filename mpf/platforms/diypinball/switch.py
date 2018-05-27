@@ -23,3 +23,6 @@ class Switch(SwitchPlatformInterface):
         self.state = event.data[0]
         for rule in self.rules.values():
             rule.process_event(event)
+
+    def get_board_name(self):
+        return 'diypinball'
