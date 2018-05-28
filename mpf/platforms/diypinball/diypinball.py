@@ -89,7 +89,6 @@ class HardwarePlatform(SwitchPlatform, DriverPlatform, LightsPlatform, SegmentDi
                 self.can.send(cmd)
             except OSError:
                 self.send_queue.put(cmd)
-                time.sleep(0.001)
 
 
     """ Switch Interface """
